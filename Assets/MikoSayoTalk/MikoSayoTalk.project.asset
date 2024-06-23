@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f183272568e6f94382e3b59c0de76cd, type: 3}
+  m_Name: MikoSayoTalk.project
+  m_EditorClassIdentifier: 
+  excelList: []
+  chapterDataList:
+  - chapterName: Boot
+    excelList:
+    - {fileID: 102900000, guid: f4d2848cb758d0d40b2a436c4284c417, type: 3}
+    excelDir: {fileID: 0}
+  checkWaitType: 0
+  checkWhiteSpaceEndOfCell: 1
+  checkTextCount: 1
+  checkTextCountAllLanguage: 0
+  scenarios: {fileID: 11400000, guid: 122c2667c5d546f4f94215be7161f195, type: 2}
+  autoImportType: 1
+  convertPath: 
+  convertVersion: 0
+  isAutoUpdateVersionAfterConvert: 0
+  isAutoConvertOnImport: 0
+  customInportSpriteFolders:
+  - {fileID: 102900000, guid: 3341070d8052bbd489b72b531090ec4d, type: 3}
+  - {fileID: 102900000, guid: e30c708c8e79fff4bbdeae8cc4606659, type: 3}
+  - {fileID: 102900000, guid: 3ca6cf6deb3cd14448e68f396749514c, type: 3}
+  - {fileID: 102900000, guid: b017922c798c1864dbddd25f8a75c5a7, type: 3}
+  - {fileID: 102900000, guid: 92eb009b203ab3f429f1d169fe8c1ddb, type: 3}
+  customInportAudioFolders:
+  - {fileID: 102900000, guid: 8020ccb01aa209f4dbde22eb4dab137a, type: 3}
+  - {fileID: 102900000, guid: f852633c8b79d694a8f37c19f6778524, type: 3}
+  - {fileID: 102900000, guid: 85c803e11952d2e4fa24a41408d1616d, type: 3}
+  - {fileID: 102900000, guid: 5178b9bcc0d35fd4cb4b39f5e6b0451a, type: 3}
+  customInportMovieFolders: []
+  quickImport: 0
+  quickImportType: 0
+  parseFormula: 0
+  parseNumreic: 0
+  checkBlankRowCountOnImport: 1000
+  checkColumnCountOnImport: 500
+  enableCommentOutOnImport: 1
+  recourceDir: {fileID: 0}
+  checkExt: 0
+  customProjectSetting: {fileID: 0}
