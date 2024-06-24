@@ -3920,9 +3920,9 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12495125
+    x: 0.18876778
     y: 0
-    width: 0.7500975
+    width: 0.6224644
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -6413,7 +6413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f928fbcd84d4af4aa44fbbe7f8286ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiMessageWindowManager: {fileID: 0}
+  uiMessageWindowManager: {fileID: 581645343}
   onReset:
     m_PersistentCalls:
       m_Calls: []
@@ -15411,7 +15411,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 30
   m_Viewport: {fileID: 0}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1584082334}
@@ -19773,9 +19773,9 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.12495125
+    x: 0.18876778
     y: 0
-    width: 0.7500975
+    width: 0.6224644
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
@@ -26175,11 +26175,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400004, guid: bc839feaadbb0d54ebee60d3a0ac4eba, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -29
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 22400004, guid: bc839feaadbb0d54ebee60d3a0ac4eba, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -199.99673
+      value: 0.000032544136
       objectReference: {fileID: 0}
     - target: {fileID: 22400004, guid: bc839feaadbb0d54ebee60d3a0ac4eba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
