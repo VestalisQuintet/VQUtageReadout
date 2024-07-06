@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Dweiss;
 using Utage;
+using System.IO;
 
 namespace VestalisQuintet.VQUtageReadout
 {
@@ -46,6 +47,35 @@ namespace VestalisQuintet.VQUtageReadout
         private new void Awake() {
 			base.Awake ();
             SetupSingelton();
+        }
+
+        private static void WriteToFileRuntime(string json, string fileDestination)
+        {
+            UnityEngine.Debug.Log("Save settings file at " + fileDestination + " with data: " + json);
+
+            File.WriteAllText(fileDestination, json);
+        }
+        public void SaveToFileRuntime()
+        {
+            // ランタイム時の書きこみ先を設定
+			var fileDestination = System.IO.Path.Combine( Application.dataPath, "../");
+			fileDestination = System.IO.Path.Combine(fileDestination, FileName);
+			fileDestination = System.IO.Path.GetFullPath(fileDestination);
+
+            string json = null;
+            try
+            {
+                json = JsonUtility.ToJson(this);
+               
+            } catch(System.Exception e)
+            {
+                Debug.LogError("Error with loading settings file: " + e);
+            }
+
+            if(json != null)
+            {
+                WriteToFileRuntime(json, fileDestination);
+            }
         }
 
         #region  Singelton

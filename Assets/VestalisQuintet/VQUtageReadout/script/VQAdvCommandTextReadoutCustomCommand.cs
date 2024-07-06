@@ -134,7 +134,7 @@ namespace VestalisQuintet.VQUtageReadout
 			//ボイスファイル設定
 			// UtageSettings.Instance.overridePartVoiceByReadOutが有効である場合、SetGeneratedVoice()を優先する
 			string voice = ParseCellOptional<string>(AdvColumnName.Voice, "");
-            if (string.IsNullOrEmpty(voice) || UtageSettings.Instance.overridePartVoiceByReadOut)
+            if (string.IsNullOrEmpty(voice) || (UtageSettings.Instance.useReadOut && UtageSettings.Instance.overridePartVoiceByReadOut))
             {
 				if(GenerateVoiceFiles?.generateFinished == true)
 				{

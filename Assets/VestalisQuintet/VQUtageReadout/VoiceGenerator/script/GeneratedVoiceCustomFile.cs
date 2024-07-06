@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,6 +13,8 @@ using Utage;
 public class GeneratedVoiceCustomFile : AssetFileBase
 {
     private UnityWebRequest www;
+
+    private CancellationTokenSource cancellationTokenSource;
 
     public GeneratedVoiceCustomFile(AssetFileManager mangager, AssetFileInfo fileInfo, IAssetFileSettingData settingData)
     : base(mangager, fileInfo, settingData)
@@ -31,16 +34,18 @@ public class GeneratedVoiceCustomFile : AssetFileBase
     public override IEnumerator LoadAsync(Action onComplete, Action onFailed)
     {
 
-        onComplete();
-        var Task = InitFromCustomFileManager();
+        cancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = cancellationTokenSource.Token;
+        var Task = InitFromCustomFileManager(cancellationToken);
         yield return new WaitUntil(() => Task.GetAwaiter().IsCompleted);
+        onComplete();
         yield break;
     }
 
     /// <summary>
     /// 自作のファイルマネージャーから、オブジェクトの参照を行う
     /// </summary>
-    private async UniTask InitFromCustomFileManager()
+    private async UniTask InitFromCustomFileManager(CancellationToken token)
     {
         if(FileType != AssetFileType.Sound)
         {
@@ -52,7 +57,7 @@ public class GeneratedVoiceCustomFile : AssetFileBase
         string path = FilePathConverter.ConvertWindowsPathToFileUri(FileInfo.FileName);
         
         www = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.WAV);
-        await www.SendWebRequest().ToUniTask();
+        await www.SendWebRequest().ToUniTask(cancellationToken: token);
 
         if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
@@ -82,6 +87,7 @@ public class GeneratedVoiceCustomFile : AssetFileBase
         }
 
         www.Dispose();
+        cancellationTokenSource.Cancel();
         IsLoadEnd = false;
     }
 }

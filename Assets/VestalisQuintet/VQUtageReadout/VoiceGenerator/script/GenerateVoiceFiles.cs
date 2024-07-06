@@ -42,6 +42,8 @@ public class GenerateVoiceFiles : MonoBehaviour
     private CancellationTokenSource _voiceGenerationCancellationTokenSource;
     public RemoteTalkExporter _remoteTalkExporter = null; // RemoteTalkExporterへの参照
 
+    public TextMeshProUGUI _generateSoundCounterText; // 音声生成進捗表示用テキスト
+
     private float recentWaitProgress = 0f; // 最後にwaitした進捗
 
     [HideInInspector]
@@ -80,6 +82,16 @@ public class GenerateVoiceFiles : MonoBehaviour
 
         // 終了したらプログレスバーを非表示にする
         loadingUi.SetActive(false);
+        _generateSoundCounterText.gameObject.SetActive(false);
+
+#if !UNITY_EDITOR
+        // useGenerateVoiceがtrueの場合、設定をfalseに直して設定ファイルを保存する
+        if(UtageSettings.Instance.useGenerateVoice)
+        {
+            UtageSettings.Instance.useGenerateVoice = false;
+            UtageSettings.Instance.SaveToFileRuntime();
+        }
+#endif
 
         // UTAGEのUIを表示する
         canvasAdvUi.SetActive(true);
@@ -303,6 +315,7 @@ public class GenerateVoiceFiles : MonoBehaviour
                 Debug.Log("テキストコマンドメッセージ:" + command.message);
                 Debug.Log("テキストコマンドハッシュ:" + command.hash);
                 Debug.Log("テキストコマンド話者:" + command.talkChar);
+                Debug.Log("ソート用キー文字列:" + textCommandListSplittedItem.Key);
 
                 // ファイルが既に存在するならスキップ
                 if (File.Exists(outFileName))
@@ -319,6 +332,25 @@ public class GenerateVoiceFiles : MonoBehaviour
                     await UniTask.DelayFrame(1);
                     Debug.Log("メッセージが空のためスキップ:" + outFileName);
                     return;
+                }
+
+                // メッセージに音として読めない文字だけが含まれている場合はスキップ
+                // 対象となる文字は　「」？！…。、 スペース、タブ　のいずれかでcommand.messageが構成されていること
+                // ただし、話者がStyle-Bert-Vits2の場合はスキップしない
+                bool isOnlySpecialCharacters = Regex.IsMatch(command.message, @"^[「」？！…。、\s\t]+$");
+                bool isNotStyleBertVits2 = !textCommandListSplittedItem.Key.StartsWith(ReaderType.StyleBertVits2.ToString());
+                if (isOnlySpecialCharacters && isNotStyleBertVits2)
+                {
+                    generatedVoiceCount = await UpdateProgressBar(textCommandTotal, generatedVoiceCount);
+                    await UniTask.DelayFrame(1);
+                    Debug.Log("メッセージが音声生成不可のためスキップ:" + outFileName + "\n" + command.message);
+                    return;
+                }
+
+                // isOnlySpecialCharactersがTrueかつ Style-Bert-Vits2である場合は、ログに残す
+                if (isOnlySpecialCharacters && !isNotStyleBertVits2)
+                {
+                    Debug.Log("Style-Bert-Vits2の音声生成対象メッセージ:" + command.message);
                 }
 
                 await GenerateVoiceFilesAsync(command, outFileName, token);
@@ -602,6 +634,9 @@ public class GenerateVoiceFiles : MonoBehaviour
         if ((progressBar.value - recentWaitProgress) > UPDATE_INTERVAL)
         {
             recentWaitProgress = progressBar.value;
+            // GenerateSoundCounterTextの更新
+            _generateSoundCounterText.text = $"（生成済音声数：{newGeneratedVoiceCount}/総音声数：{textCommandTotal}）";
+
             await UniTask.DelayFrame(1);
             Debug.Log("DelayFrame実施:" + progressBar.value);
         }
