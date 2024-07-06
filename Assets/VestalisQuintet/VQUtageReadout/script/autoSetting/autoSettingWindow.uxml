@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Button text="設定状態更新" display-tooltip-when-elided="true" name="UpdateCheckStatus" />
+    <ui:Label text="シーン中のコンポーネント設定状態" display-tooltip-when-elided="true" name="ComponentStatusLabel" />
+    <ui:TextField picking-mode="Ignore" label="音声生成処理制御オブジェクト" value="filler text" name="GenerateVoiceFiles_Check" readonly="true" tooltip="GenerateVoiceFiles" />
+    <ui:TextField picking-mode="Ignore" label="設定ファイル読み書きオブジェクト" value="filler text" name="UtageSettings_Check" readonly="true" tooltip="UtageSettings" />
+    <ui:TextField picking-mode="Ignore" label="VOICEROID読み上げ音声ソース" value="filler text" name="RemoteTalkAudio_Check" readonly="true" tooltip="RemoteTalkAudio" />
+    <ui:TextField picking-mode="Ignore" label="宴に読み上げ音声をロードする処理" value="filler text" name="UtageCustomLoadVoiceFiles_Check" readonly="true" tooltip="UtageCustomLoadVoiceFiles" />
+    <ui:TextField picking-mode="Ignore" label="VOICEROIDの読み上げ音声保存" value="filler text" name="RemoteTalkExporter_Check" readonly="true" tooltip="RemoteTalkExporter" />
+    <ui:TextField picking-mode="Ignore" label="プログレスバー" value="filler text" name="SoundGenerateSlider_Check" readonly="true" tooltip="SoundGenerateSlider" />
+    <ui:TextField picking-mode="Ignore" label="音声生成時メッセージ表示" value="filler text" name="SoundGenerateMessage_Check" readonly="true" tooltip="SoundGenerateMessage" />
+    <ui:TextField picking-mode="Ignore" label="音声生成時確認ボタン" value="filler text" name="SoundGenerateOKButton_Check" readonly="true" tooltip="SoundGenerateOKButton" />
+    <ui:TextField picking-mode="Ignore" label="音声生成進捗メッセージ表示" value="filler text" name="GenerateSoundCounterText_Check" readonly="true" tooltip="GenerateSoundCounterText" />
+    <ui:TextField picking-mode="Ignore" label="宴音声読み上げカスタムコマンド" value="filler text" name="VQAdvCommandTextReadoutCustomCommand_Check" readonly="true" tooltip="VQAdvCommandTextReadoutCustomCommand" />
+    <ui:GroupBox text="GenerateVoiceFilesの参照関係" style="height: 143px; width: 441px;">
+        <ui:TextField picking-mode="Ignore" label="ADVEngine参照" value="filler text" name="EngineRef_Check" readonly="true" />
+        <ui:TextField picking-mode="Ignore" label="ProgressBar参照" value="filler text" name="ProgressBarRef_Check" readonly="true" />
+        <ui:TextField picking-mode="Ignore" label="CanvasAdvUI参照" value="filler text" name="CanvasAdvUIRef_Check" readonly="true" />
+        <ui:TextField picking-mode="Ignore" label="LoadingUI参照" value="filler text" name="LoadingUIRef_Check" readonly="true" />
+        <ui:TextField picking-mode="Ignore" label="RemoteTalkExporter参照" value="filler text" name="RemoteTalkExporterRef_Check" readonly="true" />
+        <ui:TextField picking-mode="Ignore" label="GenerateSoundCounterText参照" value="filler text" name="GenerateSoundCounterTextRef_Check" readonly="true" />
+        <ui:Button text="自動設定実行" display-tooltip-when-elided="true" name="AutoSettingButton" />
+    </ui:GroupBox>
+</ui:UXML>
