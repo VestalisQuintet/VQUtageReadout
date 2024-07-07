@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using VestalisQuintet.VQUtageReadout;
 using Utage;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// VQUtageReadOutを宴シーンに自動設定するためのエディタ拡張
@@ -34,6 +35,13 @@ public class AutoSetting : EditorWindow
         updateCheckStatusButton.clicked += () =>
         {
             UpdateComponentExistsCheck();
+        };
+
+        // 自動設定実行ボタン
+        var execAutoSettingButton = rootVisualElement.Q<Button>("AutoSettingButton");
+        execAutoSettingButton.clicked += async () =>
+        {
+            await ExecAutoSetting();
         };
     }
 
@@ -97,6 +105,279 @@ public class AutoSetting : EditorWindow
 
         // ここからGenerateVoiceFilesの参照関係を確認する
         CheckGenerateVoiceFilesReferences(generateVoiceFilesCheck);
+    }
+
+    private async UniTask ExecAutoSetting()
+    {
+        // まず最新の状態に更新する
+        UpdateComponentExistsCheck();
+
+        // GenerateVoiceFilesが無ければプレハブを配置する
+        var generateVoiceFilesCheck = rootVisualElement.Q<TextField>("GenerateVoiceFiles_Check");
+        if (generateVoiceFilesCheck.value == SETTING_NOT_FINISHED)
+        {
+            var generateVoiceFilesPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/GenerateVoiceFiles.prefab");
+            var generateVoiceFiles = Instantiate(generateVoiceFilesPrefab);
+            generateVoiceFiles.name = "GenerateVoiceFiles";
+        }
+
+        // SettingSingletonが無ければプレハブを配置する
+        var utageSettingsCheck = rootVisualElement.Q<TextField>("UtageSettings_Check");
+        if (utageSettingsCheck.value == SETTING_NOT_FINISHED)
+        {
+            var utageSettingsPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageSettings/prefab/SettingsSingleton.prefab");
+            var utageSettings = Instantiate(utageSettingsPrefab);
+            utageSettings.name = "SettingsSingleton";
+        }
+
+        // RemoteTalkAudioが無ければ、自動配置処理を呼び出す
+        var remoteTalkAudioCheck = rootVisualElement.Q<TextField>("RemoteTalkAudio_Check");
+        if (remoteTalkAudioCheck.value == SETTING_NOT_FINISHED)
+        {
+            // RemoteTalkEditorUtils.CreateRemoteTalkClientを実行
+            IST.RemoteTalkEditor.RemoteTalkEditorUtils.CreateRemoteTalkClient(null);
+
+            // この時生成されたRemoteTalkClientは無効化する(1フレーム経過後に無効化する)
+            await UniTask.Create(async () =>
+            {
+                await UniTask.DelayFrame(1);
+                var remoteTalkClient = GameObject.Find("RemoteTalkClient");
+                remoteTalkClient.SetActive(false);
+            });
+        }
+
+        // UtageCustomLoadVoiceFilesが無ければプレハブを配置する
+        var utageCustomLoadVoiceFilesCheck = rootVisualElement.Q<TextField>("UtageCustomLoadVoiceFiles_Check");
+        if (utageCustomLoadVoiceFilesCheck.value == SETTING_NOT_FINISHED)
+        {
+            var utageCustomLoadVoiceFilesPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/UtageCustomLoadVoiceFiles.prefab");
+            var utageCustomLoadVoiceFiles = Instantiate(utageCustomLoadVoiceFilesPrefab);
+            utageCustomLoadVoiceFiles.name = "UtageCustomLoadVoiceFiles";
+        }
+
+        // RemoteTalkExporterが無ければプレハブを配置する
+        var remoteTalkExporterCheck = rootVisualElement.Q<TextField>("RemoteTalkExporter_Check");
+        if (remoteTalkExporterCheck.value == SETTING_NOT_FINISHED)
+        {
+            var remoteTalkExporterPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/RemoteTalkExporter.prefab");
+            var remoteTalkExporter = Instantiate(remoteTalkExporterPrefab);
+            remoteTalkExporter.name = "RemoteTalkExporter";
+        }
+
+        // SoundGenerateSliderが無ければプレハブを配置する
+        var soundGenerateSliderCheck = rootVisualElement.Q<TextField>("SoundGenerateSlider_Check");
+        if (soundGenerateSliderCheck.value == SETTING_NOT_FINISHED)
+        {
+            // Canvas-System UIの子オブジェクトとして配置する
+            var soundGenerateSliderPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateSlider.prefab");
+            var soundGenerateSlider = Instantiate(soundGenerateSliderPrefab);
+            soundGenerateSlider.name = "SoundGenerateSlider";
+            Transform transform = GameObject.Find("Canvas-System UI").transform;
+            if (transform != null)
+            {
+                soundGenerateSlider.transform.SetParent(transform);
+            }
+            else
+            {
+                Debug.LogError("Canvas-System UIが見つかりませんでした。");
+            }
+        }
+
+        // SoundGererateMessageが無ければプレハブを配置する
+        var soundGenerateMessageCheck = rootVisualElement.Q<TextField>("SoundGenerateMessage_Check");
+        if (soundGenerateMessageCheck.value == SETTING_NOT_FINISHED)
+        {
+            // Canvas-System UIの子オブジェクトとして配置する
+            var soundGenerateMessagePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateMessage.prefab");
+            var soundGenerateMessage = Instantiate(soundGenerateMessagePrefab);
+            soundGenerateMessage.name = "SoundGenerateMessage";
+            Transform transform = GameObject.Find("Canvas-System UI").transform;
+            if (transform != null)
+            {
+                soundGenerateMessage.transform.SetParent(transform);
+            }
+            else
+            {
+                Debug.LogError("Canvas-System UIが見つかりませんでした。");
+            }
+        }
+
+        // SoundGenerateOKButtonが無ければプレハブを配置する
+        var soundGenerateOKButtonCheck = rootVisualElement.Q<TextField>("SoundGenerateOKButton_Check");
+        if (soundGenerateOKButtonCheck.value == SETTING_NOT_FINISHED)
+        {
+            // Canvas-System UIの子オブジェクトとして配置する
+            var soundGenerateOKButtonPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateOKButton.prefab");
+            var soundGenerateOKButton = Instantiate(soundGenerateOKButtonPrefab);
+            soundGenerateOKButton.name = "SoundGenerateOKButton";
+            Transform transform = GameObject.Find("Canvas-System UI").transform;
+            if (transform != null)
+            {
+                soundGenerateOKButton.transform.SetParent(transform);
+            }
+            else
+            {
+                Debug.LogError("Canvas-System UIが見つかりませんでした。");
+            }
+        }
+
+        // GenerateSoundCounterTextが無ければプレハブを配置する
+        var generateSoundCounterTextCheck = rootVisualElement.Q<TextField>("GenerateSoundCounterText_Check");
+        if (generateSoundCounterTextCheck.value == SETTING_NOT_FINISHED)
+        {
+            // Canvas-System UIの子オブジェクトとして配置する
+            var generateSoundCounterTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/GenerateSoundCounterText.prefab");
+            var generateSoundCounterText = Instantiate(generateSoundCounterTextPrefab);
+            generateSoundCounterText.name = "GenerateSoundCounterText";
+            Transform transform = GameObject.Find("Canvas-System UI").transform;
+            if (transform != null)
+            {
+                generateSoundCounterText.transform.SetParent(transform);
+            }
+            else
+            {
+                Debug.LogError("Canvas-System UIが見つかりませんでした。");
+            }
+        }
+
+        // VQAdvCommandTextReadoutCustomCommandが無ければAdvEngineにコンポーネントを追加する
+        var vqAdvCommandTextReadoutCustomCommandCheck = rootVisualElement.Q<TextField>("VQAdvCommandTextReadoutCustomCommand_Check");
+        if (vqAdvCommandTextReadoutCustomCommandCheck.value == SETTING_NOT_FINISHED)
+        {
+            var advEngine = findObjectFromScene("AdvEngine");
+            if (advEngine != null)
+            {
+                advEngine.AddComponent<VQAdvCommandTextReadoutCustomCommand>();
+            }
+            else
+            {
+                Debug.LogError("AdvEngineが見つかりませんでした。");
+            }
+        }
+
+        // オブジェクト一覧キャッシュを削除する
+        sceneObjects = null;
+
+        // GenerateVoiceFilesの参照関係を設定する
+        SetGenerateVoiceFilesComponents();
+
+        // 最終的に問題なく配置できたか再度確認する
+        await UniTask.Create(async () =>
+        {
+            await UniTask.DelayFrame(1);
+            UpdateComponentExistsCheck();
+        });
+    }
+
+    private void SetGenerateVoiceFilesComponents()
+    {
+        var engineRefCheck = rootVisualElement.Q<TextField>("EngineRef_Check");
+        var progressBarRefCheck = rootVisualElement.Q<TextField>("ProgressBarRef_Check");
+        var canvasAdvUIRefCheck = rootVisualElement.Q<TextField>("CanvasAdvUIRef_Check");
+        var loadingUIRefCheck = rootVisualElement.Q<TextField>("LoadingUIRef_Check");
+        var remoteTalkExporterRefCheck = rootVisualElement.Q<TextField>("RemoteTalkExporterRef_Check");
+        var generateSoundCounterTextRefCheck = rootVisualElement.Q<TextField>("GenerateSoundCounterTextRef_Check");
+
+        // GenerateVoiceFilesが無ければ中断
+        var generateVoiceFilesCheck = rootVisualElement.Q<TextField>("GenerateVoiceFiles_Check");
+        if (generateVoiceFilesCheck.value == SETTING_NOT_FINISHED)
+        {
+            Debug.LogError("GenerateVoiceFilesが見つかりませんでした。");
+            return;
+        }
+        GenerateVoiceFiles generateVoiceFiles = findObjectFromScene("GenerateVoiceFiles")?.GetComponent<GenerateVoiceFiles>();
+        if(generateVoiceFiles == null)
+        {
+            Debug.LogError("GenerateVoiceFilesが見つかりませんでした。");
+            return;
+        }
+
+        // AdvEngineへの参照が無ければ設定する
+        if (engineRefCheck.value == SETTING_NOT_FINISHED)
+        {
+            var advEngine = findObjectFromScene("AdvEngine")?.GetComponent<AdvEngine>();
+            if (advEngine != null)
+            {
+                var serializedGenerateVoiceFiles = new SerializedObject(generateVoiceFiles);
+                serializedGenerateVoiceFiles.FindProperty("_engine").objectReferenceValue = advEngine;
+
+                serializedGenerateVoiceFiles.ApplyModifiedProperties();
+            }
+            else
+            {
+                Debug.LogError("AdvEngineが見つかりませんでした。");
+            }
+        }
+
+        // progressBarへの参照が無ければ設定する
+        if (progressBarRefCheck.value == SETTING_NOT_FINISHED)
+        {
+            var progressBar = findObjectFromScene("SoundGenerateSlider")?.GetComponent<UnityEngine.UI.Slider>();
+            if (progressBar != null)
+            {
+                generateVoiceFiles.progressBar = progressBar;
+            }
+            else
+            {
+                Debug.LogError("SoundGenerateSliderが見つかりませんでした。");
+            }
+        }
+
+        // canvasAdvUIへの参照が無ければ設定する
+        if (canvasAdvUIRefCheck.value == SETTING_NOT_FINISHED)
+        {
+            var canvasAdvUI = findObjectFromScene("Canvas-AdvUI");
+            if (canvasAdvUI != null)
+            {
+                generateVoiceFiles.canvasAdvUi = canvasAdvUI;
+            }
+            else
+            {
+                Debug.LogError("Canvas-AdvUIが見つかりませんでした。");
+            }
+        }
+
+        // loadingUIへの参照が無ければ設定する
+        if (loadingUIRefCheck.value == SETTING_NOT_FINISHED)
+        {
+            var loadingUI = findObjectFromScene("SoundGenerateSlider");
+            if (loadingUI != null)
+            {
+                generateVoiceFiles.loadingUi = loadingUI;
+            }
+            else
+            {
+                Debug.LogError("SoundGenerateSliderが見つかりませんでした。");
+            }
+        }
+
+        // RemoteTalkExporterへの参照が無ければ設定する
+        if (remoteTalkExporterRefCheck.value == SETTING_NOT_FINISHED)
+        {
+            var remoteTalkExporter = findObjectFromScene("RemoteTalkExporter")?.GetComponent<RemoteTalkExporter>();
+            if (remoteTalkExporter != null)
+            {
+                generateVoiceFiles._remoteTalkExporter = remoteTalkExporter;
+            }
+            else
+            {
+                Debug.LogError("RemoteTalkExporterが見つかりませんでした。");
+            }
+        }
+
+        // GenerateSoundCounterTextへの参照が無ければ設定する
+        if (generateSoundCounterTextRefCheck.value == SETTING_NOT_FINISHED)
+        {
+            var generateSoundCounterText = findObjectFromScene("GenerateSoundCounterText")?.GetComponent<TMPro.TextMeshProUGUI>();
+            if (generateSoundCounterText != null)
+            {
+                generateVoiceFiles._generateSoundCounterText = generateSoundCounterText;
+            }
+            else
+            {
+                Debug.LogError("GenerateSoundCounterTextが見つかりませんでした。");
+            }
+        }
     }
 
     private void CheckGenerateVoiceFilesReferences(TextField generateVoiceFilesCheck)
@@ -174,7 +455,7 @@ public class AutoSetting : EditorWindow
             }
 
             // RemoteTalkExporterの参照関係を確認
-            RemoteTalkExporter remoteTalkExporter = findObjectFromScene("RemoteTalkExporter").GetComponent<RemoteTalkExporter>();
+            RemoteTalkExporter remoteTalkExporter = findObjectFromScene("RemoteTalkExporter")?.GetComponent<RemoteTalkExporter>();
             if (generateVoiceFilesObj._remoteTalkExporter != null && generateVoiceFilesObj._remoteTalkExporter == remoteTalkExporter)
             {
                 remoteTalkExporterRefCheck.value = SETTING_COMPLETED;
@@ -185,7 +466,7 @@ public class AutoSetting : EditorWindow
             }
 
             // GenerateSoundCounterTextの参照関係を確認
-            TMPro.TextMeshProUGUI generateSoundCounterText = findObjectFromScene("GenerateSoundCounterText").GetComponent<TMPro.TextMeshProUGUI>();
+            TMPro.TextMeshProUGUI generateSoundCounterText = findObjectFromScene("GenerateSoundCounterText")?.GetComponent<TMPro.TextMeshProUGUI>();
             if (generateVoiceFilesObj._generateSoundCounterText != null && generateVoiceFilesObj._generateSoundCounterText == generateSoundCounterText)
             {
                 generateSoundCounterTextRefCheck.value = SETTING_COMPLETED;
