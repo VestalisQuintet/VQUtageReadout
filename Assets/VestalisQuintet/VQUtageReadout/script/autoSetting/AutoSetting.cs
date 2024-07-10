@@ -258,6 +258,9 @@ public class AutoSetting : EditorWindow
         // オブジェクト一覧キャッシュを削除する
         sceneObjects = null;
 
+        // 現時点での配置状態を確認する
+        UpdateComponentExistsCheck();
+
         // GenerateVoiceFilesの参照関係を設定する
         SetGenerateVoiceFilesComponents();
 
