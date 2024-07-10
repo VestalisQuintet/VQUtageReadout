@@ -50,7 +50,9 @@ namespace VestalisQuintet.VQUtageReadout
 
     public class VQAdvCommandTextReadout : AdvCommandText
     {
-		public GenerateVoiceFiles GenerateVoiceFiles { get; set; } // ボイスファイル生成クラス
+        public AssetFile ReadoutVoiceFile = null; // 読み上げ音声ファイル
+
+        public GenerateVoiceFiles GenerateVoiceFiles { get; set; } // ボイスファイル生成クラス
 
 		public VQAdvCommandTextReadout(StringGridRow row, AdvSettingDataManager dataManager, GenerateVoiceFiles generateVoiceFiles)
 			: base(row, dataManager)
@@ -59,11 +61,6 @@ namespace VestalisQuintet.VQUtageReadout
 
 			//ボイスファイル設定
 			InitVoiceFile(dataManager);
-
-			//ページコントロール
-			this.PageCtrlType = ParseCellOptional<AdvPageControllerType>(AdvColumnName.PageCtrl, AdvPageControllerType.InputBrPage);
-			this.IsNextBr = AdvPageController.IsBrType(PageCtrlType);
-			this.IsPageEnd = AdvPageController.IsPageEndType(PageCtrlType);
 
 			//エディター用のチェック
 			if (AdvCommand.IsEditorErrorCheck)
@@ -79,18 +76,13 @@ namespace VestalisQuintet.VQUtageReadout
 		//ページ用のデータからコマンドに必要な情報を初期化
 		public override void InitFromPageData(AdvScenarioPageData pageData)
 		{
-			this.PageData = pageData;
-			this.IndexPageData = PageData.TextDataList.Count;
-			PageData.AddTextData(this);
-			PageData.InitMessageWindowName(this, ParseCellOptional<string>(AdvColumnName.WindowType, ""));
+			base.InitFromPageData(pageData);
 		}
 
 		//エンティティコマンドとして利用
 		public new void InitOnCreateEntity(AdvCommand original)
 		{
-			VQAdvCommandTextReadout originalText = original as VQAdvCommandTextReadout; 
-			this.PageData = originalText.PageData;
-			PageData.ChangeTextDataOnCreateEntity(originalText.IndexPageData, this);
+			base.InitOnCreateEntity(original);
 		}
 
 		//コマンド実行
@@ -101,7 +93,16 @@ namespace VestalisQuintet.VQUtageReadout
 			{
 				engine.Page.CharacterInfo = null;
 			}
-			if (null != VoiceFile)
+			if (ReadoutVoiceFile != null)
+			{
+				if (!engine.Page.CheckSkip() || !engine.Config.SkipVoiceAndSe)
+				{
+					// キャラクターラベル
+					engine.SoundManager.PlayVoice(engine.Page.CharacterLabel, ReadoutVoiceFile);
+					engine.ScenarioSound.SetVoiceInScenario(engine.Page.CharacterLabel, ReadoutVoiceFile);
+				}
+			}
+			else if (null != VoiceFile)
 			{
 				if (!engine.Page.CheckSkip () || !engine.Config.SkipVoiceAndSe) 
 				{
@@ -144,7 +145,7 @@ namespace VestalisQuintet.VQUtageReadout
             }
             else
             {
-                VoiceFile = ParseVoiceSub(dataManager, voice);
+                base.InitVoiceFile(dataManager);
             }
         }
 
@@ -184,43 +185,14 @@ namespace VestalisQuintet.VQUtageReadout
             if (File.Exists(readoutFileName))
             {
                 Debug.Log($"ボイスファイル{readoutFileName}が存在するため、ロードします。");
-                VoiceFile = AssetFileManager.GetFileCreateIfMissing(readoutFileName, new AdvVoiceSetting(this.RowData));
+                ReadoutVoiceFile = AssetFileManager.GetFileCreateIfMissing(readoutFileName, new AdvVoiceSetting(this.RowData));
             }
         }
 
         public override void UpdatePageCtrlType()
 		{
-			var textData = new TextData(ParseCellLocalizedText());
-
-			//テキストスキップタグで、ページコントロールを無視する場合
-			var parsedText = textData.ParsedText;
-			if (parsedText.SkipText &&  !parsedText.EnablePageCtrlOnSkipText)
-			{
-				if (this.PageCtrlType == AdvPageControllerType.InputBrPage)
-				{
-					this.PageCtrlType = AdvPageControllerType.BrPage;
-				}
-				else
-				{
-					this.PageCtrlType = AdvPageControllerType.Next;
-					
-				}
-			}
-			this.IsNextBr = AdvPageController.IsBrType(PageCtrlType);
+			base.UpdatePageCtrlType();
 		}
-
-		//ページ区切り系のコマンドか
-		public override bool IsTypePage() { return true; }
-		//ページ終端のコマンドか
-		public override bool IsTypePageEnd() { return IsPageEnd; }
-		public new bool IsPageEnd { get; private set; }
-		public new bool IsNextBr { get; private set; }
-		public new AdvPageControllerType PageCtrlType { get; private set; }
-
-		public new AssetFile VoiceFile { get; private set; }
-
-		AdvScenarioPageData PageData { get; set; }
-		int IndexPageData { get; set; }
     }
 
 }
