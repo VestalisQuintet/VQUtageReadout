@@ -21,7 +21,7 @@ public class AutoSetting : EditorWindow
         window.Show();
     }
 
-    private const string SETTING_COMPLETED = "設定済";
+    private const string SETTING_COMPLETED = "[OK]設定済";
     private const string SETTING_NOT_FINISHED = "未設定";
     [SerializeField] private VisualTreeAsset _rootVisualTreeAsset;
 
