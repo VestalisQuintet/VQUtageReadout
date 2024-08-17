@@ -168,14 +168,13 @@ public class AutoSetting : EditorWindow
         var soundGenerateSliderCheck = rootVisualElement.Q<TextField>("SoundGenerateSlider_Check");
         if (soundGenerateSliderCheck.value == SETTING_NOT_FINISHED)
         {
-            // Canvas-System UIの子オブジェクトとして配置する
-            var soundGenerateSliderPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateSlider.prefab");
-            var soundGenerateSlider = Instantiate(soundGenerateSliderPrefab);
-            soundGenerateSlider.name = "SoundGenerateSlider";
             Transform transform = GameObject.Find("Canvas-System UI").transform;
             if (transform != null)
             {
-                soundGenerateSlider.transform.SetParent(transform);
+                // Canvas-System UIの子オブジェクトとして配置する
+                var soundGenerateSliderPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateSlider.prefab");
+                var soundGenerateSlider = Instantiate(soundGenerateSliderPrefab, transform);
+                soundGenerateSlider.name = "SoundGenerateSlider";
             }
             else
             {
@@ -187,14 +186,13 @@ public class AutoSetting : EditorWindow
         var soundGenerateMessageCheck = rootVisualElement.Q<TextField>("SoundGenerateMessage_Check");
         if (soundGenerateMessageCheck.value == SETTING_NOT_FINISHED)
         {
-            // Canvas-System UIの子オブジェクトとして配置する
-            var soundGenerateMessagePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateMessage.prefab");
-            var soundGenerateMessage = Instantiate(soundGenerateMessagePrefab);
-            soundGenerateMessage.name = "SoundGenerateMessage";
             Transform transform = GameObject.Find("Canvas-System UI").transform;
             if (transform != null)
             {
-                soundGenerateMessage.transform.SetParent(transform);
+                // Canvas-System UIの子オブジェクトとして配置する
+                var soundGenerateMessagePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateMessage.prefab");
+                var soundGenerateMessage = Instantiate(soundGenerateMessagePrefab, transform);
+                soundGenerateMessage.name = "SoundGenerateMessage";
             }
             else
             {
@@ -206,14 +204,13 @@ public class AutoSetting : EditorWindow
         var soundGenerateOKButtonCheck = rootVisualElement.Q<TextField>("SoundGenerateOKButton_Check");
         if (soundGenerateOKButtonCheck.value == SETTING_NOT_FINISHED)
         {
-            // Canvas-System UIの子オブジェクトとして配置する
-            var soundGenerateOKButtonPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateOKButton.prefab");
-            var soundGenerateOKButton = Instantiate(soundGenerateOKButtonPrefab);
-            soundGenerateOKButton.name = "SoundGenerateOKButton";
             Transform transform = GameObject.Find("Canvas-System UI").transform;
             if (transform != null)
             {
-                soundGenerateOKButton.transform.SetParent(transform);
+                // Canvas-System UIの子オブジェクトとして配置する
+                var soundGenerateOKButtonPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/SoundGenerateOKButton.prefab");
+                var soundGenerateOKButton = Instantiate(soundGenerateOKButtonPrefab, transform);
+                soundGenerateOKButton.name = "SoundGenerateOKButton";
             }
             else
             {
@@ -225,14 +222,13 @@ public class AutoSetting : EditorWindow
         var generateSoundCounterTextCheck = rootVisualElement.Q<TextField>("GenerateSoundCounterText_Check");
         if (generateSoundCounterTextCheck.value == SETTING_NOT_FINISHED)
         {
-            // Canvas-System UIの子オブジェクトとして配置する
-            var generateSoundCounterTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/GenerateSoundCounterText.prefab");
-            var generateSoundCounterText = Instantiate(generateSoundCounterTextPrefab);
-            generateSoundCounterText.name = "GenerateSoundCounterText";
             Transform transform = GameObject.Find("Canvas-System UI").transform;
             if (transform != null)
             {
-                generateSoundCounterText.transform.SetParent(transform);
+                // Canvas-System UIの子オブジェクトとして配置する
+                var generateSoundCounterTextPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VestalisQuintet/VQUtageReadout/prefab/GenerateSoundCounterText.prefab");
+                var generateSoundCounterText = Instantiate(generateSoundCounterTextPrefab, transform);
+                generateSoundCounterText.name = "GenerateSoundCounterText";
             }
             else
             {
