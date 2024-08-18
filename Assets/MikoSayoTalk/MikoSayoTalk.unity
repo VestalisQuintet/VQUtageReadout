@@ -7281,7 +7281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useReadOut: 1
-  useGenerateVoice: 1
+  useGenerateVoice: 0
   voiceVoxBaseUrl: http://localhost
   voiceVoxPort: 50021
   styleBertVits2BaseUrl: http://127.0.0.1
@@ -7311,7 +7311,7 @@ MonoBehaviour:
     modelName: 
     styleName: "\u30CE\u30FC\u30DE\u30EB"
     readerExePath: 
-  overridePartVoiceByReadOut: 0
+  overridePartVoiceByReadOut: 1
 --- !u!4 &521225215
 Transform:
   m_ObjectHideFlags: 0
